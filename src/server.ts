@@ -1,89 +1,39 @@
 import express, { Request, Response} from 'express'
+import multer from 'multer';
+import dotenv from 'dotenv';
+import eventRoute from './routes/EventRoute';
+
+dotenv.config();
+
+import { uploadFile } from './services/UploadFileService';
+
+
 const app = express()
 app.use(express.json()) 
+app.use('/events',eventRoute);
 const port = 3000
 
-interface Event {
-    id: number;
-    category: string;
-    title: string;
-    description: string;
-    location: string;
-    date: string;
-    time: string;
-    petsAllowed: boolean;
-    organizer: string;
-}
+const upload = multer({ storage: multer.memoryStorage() });
 
-const events: Event[] = [
-    {
-        id: 1,
-        category: "Music",
-        title: "Concert",
-        description: "A live concert",
-        location: "London",
-        date: "2021-07-01",
-        time: "19:00",
-        petsAllowed: false,
-        organizer: "Live Nation",
-    },
-    {
-        id: 2,
-        category: "Sports",
-        title: "Marathon",
-        description: "Annual city marathon",
-        location: "New York",
-        date: "2021-09-15",
-        time: "07:00",
-        petsAllowed: false,
-        organizer: "NYC Sports",
-    },
-    {
-        id: 3,
-        category: "Tech",
-        title: "Tech Conference",
-        description: "A conference on emerging technologies",
-        location: "San Francisco",
-        date: "2021-11-20",
-        time: "09:00",
-        petsAllowed: false,
-        organizer: "TechWorld Inc.",
-    },
-    {
-        id: 4,
-        category: "Food",
-        title: "Food Festival",
-        description: "A festival featuring food from around the world",
-        location: "Paris",
-        date: "2021-08-10",
-        time: "12:00",
-        petsAllowed: true,
-        organizer: "Gourmet Events",
-    },
-    {
-        id: 5,
-        category: "Art",
-        title: "Art Exhibition",
-        description: "An exhibition showcasing modern art",
-        location: "Berlin",
-        date: "2021-10-05",
-        time: "10:00",
-        petsAllowed: true,
-        organizer: "ArtSphere",
-    },
-    {
-        id: 6,
-        category: "Theatre",
-        title: "Broadway Show",
-        description: "A popular Broadway performance",
-        location: "New York",
-        date: "2021-12-01",
-        time: "20:00",
-        petsAllowed: false,
-        organizer: "Broadway Productions",
-    }
-]
+app.post('/upload', upload.single('file'), async (req: any, res: any) => {
+    try {
+        const file = req.file;
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
     
+        const bucket = process.env.SUPABASE_BUCKET_NAME;
+        const filePath = process.env.UPLOAD_DIR;
+        if (!bucket || !filePath) {
+            return res.status(500).send('Bucket name or file path not configured.');
+        }
+        const ouputUrl = await uploadFile(bucket, filePath, file);
+    
+        res.status(200).send(ouputUrl);
+    } catch (error) {
+        res.status(500).send('Error uploading file.');
+    }
+});
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!')
@@ -93,31 +43,8 @@ app.get('/test', (req: Request, res: Response) => {
     const output = `id: ${id}`;
     res.send(output);
 })
-app.get("/events", (req, res) => {
-    if (req.query.category) {
-        const category = req.query.category;
-        const filteredEvents = events.filter((event) => event.category ===
-        category);
-        res.json(filteredEvents);
-    } else {
-        res.json(events);
-    }
-});
-app.get("/events/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const event = events.find((event) => event.id === id);
-    if (event) {
-        res.json(event);
-    } else {
-        res.status(404).send("Event not found");
-    }
-});
-app.post("/events", (req, res) => {
-    const newEvent: Event = req.body;
-    newEvent.id = events.length + 1;
-    events.push(newEvent);
-    res.json(newEvent);
-});
+
+
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
