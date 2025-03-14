@@ -1,0 +1,104 @@
+<<<<<<< HEAD
+ # Node modules
+=======
+# Node modules
+>>>>>>> 7c6d355 (commit)
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+<<<<<<< HEAD
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+=======
+# Environment variables
+.env
+.env.local.env.*.local
+>>>>>>> 7c6d355 (commit)
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.log
+<<<<<<< HEAD
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+=======
+# Dependency directories
+node_modules/
+jspm_packages/
+>>>>>>> 7c6d355 (commit)
+# Build files
+dist/
+build/
+.cache
+.next/
+out/
+.vite/
+.vscode/
+.idea/
+<<<<<<< HEAD
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Debugging
+*.swp
+*.swo
+
+# Typescript
+*.tsbuildinfo
+
+=======
+# OS specific files
+.DS_Store
+Thumbs.db
+# Debugging
+*.swp
+*.swo
+# Typescript
+*.tsbuildinfo
+>>>>>>> 7c6d355 (commit)
+# Testing
+coverage/
+jest.cache/
+.nyc_output/
+<<<<<<< HEAD
+
+=======
+>>>>>>> 7c6d355 (commit)
+# Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+<<<<<<< HEAD
+
+# Linting
+.eslintcache
+
+# Misc
+.npm/
+.pnp/
+.pnp.js
+.parcel-cache/
+=======
+# Linting
+.eslintcache
+# Misc
+.npm/
+.pnp/.pnp.js
+.parcel-cache/
+>>>>>>> 7c6d355 (commit)
